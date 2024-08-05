@@ -14,7 +14,7 @@ func main(){
 	reader := bufio.NewReader(os.Stdin)
 	student := Student{}
 	
-
+	// Read Student Name
 	for {
 		fmt.Print("Enter Your Full Name: ")
 		studentName, _ := reader.ReadString('\n')
@@ -28,6 +28,7 @@ func main(){
 		}
 	}
 	
+	// Read number of subjects
 	var subjectCount int
 
 	for {
@@ -46,6 +47,7 @@ func main(){
 	
 	fmt.Println()
 
+	// Read Subject Name and Grade
 	for i:=0; i < subjectCount; i++ {
 		subject := Subject{}
 		for {
@@ -77,6 +79,8 @@ func main(){
 		student.AddSubject(subject)
 		fmt.Println("-----------------------")
 	}
+
+	// Display Grade
 	fmt.Println()
 	student.display()
 
