@@ -24,7 +24,7 @@ This project is a console-based library management system implemented in Go. It 
 
 1. Clone the repository:
 
-```
+```sh
 git clone https://github.com/Johna210/A2SV-Backend-Track/Track3.git
 cd backend_assessment/Track3
 
@@ -32,21 +32,21 @@ cd backend_assessment/Track3
 
 2. Fetch the dependencies:
 
-```
+```sh
 go get ./...
 
 ```
 
 3. Initialize the project:
 
-```
+```sh
 go mod tidy
 
 ```
 
 ## Running the project
 
-```
+```sh
 go run main.go
 
 ```
