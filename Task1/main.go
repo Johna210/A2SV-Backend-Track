@@ -68,7 +68,7 @@ func main(){
 			input,_ := reader.ReadString('\n')
 			input = strings.TrimSpace(input)
 
-			parsedInt, err := strconv.Atoi(input)
+			parsedInt, err := strconv.ParseFloat(input,64)
 			if err != nil || parsedInt < 0 || parsedInt > 100 {
 				fmt.Println("Invalid input. Please enter a number between 0 and 100.")
 			} else {
