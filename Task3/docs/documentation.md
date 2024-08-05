@@ -26,7 +26,7 @@ This project is a console-based library management system implemented in Go. It 
 
 ```sh
 git clone https://github.com/Johna210/A2SV-Backend-Track/Track3.git
-cd backend_assessment/Track3
+cd A2SV-Backend-Track/Track3
 
 ```
 
