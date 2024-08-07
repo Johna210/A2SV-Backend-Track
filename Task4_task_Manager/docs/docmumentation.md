@@ -4,17 +4,18 @@
 library_management/
 ├── main.go
 ├── controllers/
-│ └── task_controller.go
+│   └── task_controller.go
 ├── models/
-│ └── task.go
+│   └── task.go
 ├── data/
-│ └── task_service.go
+│   └── task_service.go
 ├── docs/
-│ └── documentation.md
+│   └── documentation.md
 ├── router/
-| └── router.go
-└── go.mod
+│   └── router.go
+├── go.mod
 └── go.sum
+
 ```
 
 ## Overview
