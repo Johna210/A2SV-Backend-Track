@@ -1,5 +1,6 @@
 ## Project structure
 
+```
 library_management/
 ├── main.go
 ├── controllers/
@@ -14,7 +15,7 @@ library_management/
 | └── router.go
 └── go.mod
 └── go.sum
-
+```
 
 ## Overview
 
@@ -60,3 +61,5 @@ There are Five Api End Points for this backend
 - Post http://localhost:4000/tasks with a request body
 - Put http://localhost:4000/tasks/2 with a request boyd
 - Delete http://localhost:4000/tasks/2
+
+Detailed Api Documentation - https://documenter.getpostman.com/view/29564648/2sA3rzJsV2
