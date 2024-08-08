@@ -67,7 +67,7 @@ There are Five Api End Points for this backend
 - Get http://localhost:4000/tasks
 - Get http://localhost:4000/tasks/2
 - Post http://localhost:4000/tasks with a request body
-- Put http://localhost:4000/tasks/2 with a request boyd
+- Put http://localhost:4000/tasks/2 with a request body
 - Delete http://localhost:4000/tasks/2
 
-Detailed Api Documentation - https://documenter.getpostman.com/view/29564648/2sA3rzJsV2
+Detailed Api Documentation - https://documenter.getpostman.com/view/29564648/2sA3s1nXCt
