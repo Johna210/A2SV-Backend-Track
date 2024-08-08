@@ -2,7 +2,7 @@
 
 ```
 library_management/
-├── main.go
+├── bin/
 ├── controllers/
 │   └── task_controller.go
 ├── models/
@@ -13,8 +13,11 @@ library_management/
 │   └── documentation.md
 ├── router/
 │   └── router.go
+├── tmp/
 ├── go.mod
-└── go.sum
+├── go.sum
+├── main.go
+├── .air.toml
 
 ```
 
