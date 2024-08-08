@@ -1,6 +1,10 @@
 package models
 
-import "go.mongodb.org/mongo-driver/bson/primitive"
+import (
+	"time"
+
+	"go.mongodb.org/mongo-driver/bson/primitive"
+)
 
 type TaskStatus string
 
@@ -15,6 +19,7 @@ type Task struct {
 	Title       string     `json:"title" bson:"title"`
 	Description string     `json:"description" bson:"description"`
 	Status      TaskStatus `json:"status" bson:"status"`
+	DueDate     time.Time  `json:"due_date" bson:"due_date"`
 }
 
 // TaskResponse struct for responses, including the ID
@@ -23,4 +28,5 @@ type TaskResponse struct {
 	Title       string             `json:"title" bson:"title"`
 	Description string             `json:"description" bson:"description"`
 	Status      TaskStatus         `json:"status" bson:"status"`
+	DueDate     time.Time          `json:"due_date" bson:"due_date"`
 }

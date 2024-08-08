@@ -21,8 +21,11 @@ type TaskManager struct {
 	Collection *mongo.Collection
 }
 
+// changeIdToObjectId converts a string representation of an ObjectID to a primitive.ObjectID.
+// It takes a string `id` as input and returns a primitive.ObjectID and an error.
+// If the conversion is successful, it returns the converted ObjectID and a nil error.
+// If the conversion fails, it returns an empty ObjectID and an error indicating an invalid id format.
 func changeIdToObjectId(id string) (primitive.ObjectID, error) {
-	// change id to ObjectId
 	objectID, err := primitive.ObjectIDFromHex(id)
 	if err != nil {
 		return primitive.ObjectID{}, errors.New("invalid id format")
@@ -31,6 +34,8 @@ func changeIdToObjectId(id string) (primitive.ObjectID, error) {
 	return objectID, nil
 }
 
+// ConnectToMongoDB connects to a MongoDB database using the provided URI, database name, and collection name.
+// It returns a new instance of TaskManager and an error if any occurred during the connection process.
 func (tm *TaskManager) ConnectToMongoDB(uri, dbName, collectionName string) (*TaskManager, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
@@ -54,7 +59,8 @@ func (tm *TaskManager) ConnectToMongoDB(uri, dbName, collectionName string) (*Ta
 	}, nil
 }
 
-// GetTasks returns a slice of all tasks in the TaskManager.
+// GetTasks retrieves all tasks from the task manager.
+// It returns a slice of TaskResponse and an error, if any.
 func (tm *TaskManager) GetTasks() ([]TaskResponse, error) {
 
 	cursor, err := tm.Collection.Find(context.TODO(), bson.D{})
@@ -70,6 +76,11 @@ func (tm *TaskManager) GetTasks() ([]TaskResponse, error) {
 	return tasks, nil
 }
 
+// AddTask adds a new task to the task manager.
+// It takes a newTask parameter of type Task, which represents the task to be added.
+// It returns a TaskResponse and an error.
+// The TaskResponse contains the details of the added task.
+// If an error occurs during the insertion or decoding process, an empty TaskResponse and the error are returned.
 func (tm *TaskManager) AddTask(newTask Task) (TaskResponse, error) {
 	response, err := tm.Collection.InsertOne(context.TODO(), newTask)
 	if err != nil {
@@ -88,13 +99,16 @@ func (tm *TaskManager) AddTask(newTask Task) (TaskResponse, error) {
 
 }
 
+// UpdateTask updates a task with the given ID in the task manager.
+// It takes a newTask object containing the updated task details and the ID of the task to be updated.
+// It returns a TaskResponse object containing the updated task and an error if any.
 func (tm *TaskManager) UpdateTask(newTask Task, id string) (TaskResponse, error) {
 	objectID, err := changeIdToObjectId(id)
 	if err != nil {
 		return TaskResponse{}, err
 	}
 
-	// Populate update fileds
+	// Populate update fields
 	updateFields := make(bson.M)
 	if newTask.Title != "" {
 		updateFields["title"] = newTask.Title
@@ -133,6 +147,10 @@ func (tm *TaskManager) UpdateTask(newTask Task, id string) (TaskResponse, error)
 	return updatedTask, nil
 }
 
+// GetTask retrieves a task from the task manager by its ID.
+// It takes an ID string as input and returns a TaskResponse and an error.
+// If the task is found, the TaskResponse is populated with the task details.
+// If the task is not found, it returns an empty TaskResponse and an error indicating that no task was found with the given ID.
 func (tm *TaskManager) GetTask(id string) (TaskResponse, error) {
 	objectID, err := changeIdToObjectId(id)
 	if err != nil {
@@ -152,6 +170,10 @@ func (tm *TaskManager) GetTask(id string) (TaskResponse, error) {
 	return task, nil
 }
 
+// RemoveTask removes a task from the task manager based on the given ID.
+// It takes the ID of the task as a parameter and returns an error if any.
+// If the task with the given ID is not found, it returns an error with the message "no task found with the given ID".
+// If the task is successfully deleted, it returns nil.
 func (tm *TaskManager) RemoveTask(id string) error {
 	objectID, err := changeIdToObjectId(id)
 	if err != nil {
