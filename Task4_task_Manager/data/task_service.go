@@ -78,6 +78,10 @@ func (tm *TaskManager) UpdateTask(id int, newTask Task) (Task, error) {
 				taskToUpdate.Status = newTask.Status
 			}
 
+			if newTask.DueDate.IsZero() {
+				taskToUpdate.DueDate = newTask.DueDate
+			}
+
 			tm.Tasks[id] = taskToUpdate
 
 			return tm.Tasks[id], nil
