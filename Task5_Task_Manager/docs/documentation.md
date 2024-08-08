@@ -63,6 +63,13 @@ go run main.go
 
 ```
 
+or if using air
+
+```sh
+air 
+
+```
+
 - After Monog db installation and runnig the app a mongo db database called taskManager with a collection of tasks in it will be created.
 
 There are Five Api End Points for this backend
