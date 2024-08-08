@@ -68,27 +68,27 @@ func AddTaskController(c *gin.Context) {
 	var newTask Task
 
 	if err := c.ShouldBindJSON(&newTask); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"message": "invalid request body"})
+		c.JSON(http.StatusBadRequest, gin.H{"message": "invalid request body."})
 		return
 	}
 
 	if newTask.Title == "" {
-		c.JSON(http.StatusBadRequest, gin.H{"message": "Missing Task Title"})
+		c.JSON(http.StatusBadRequest, gin.H{"message": "Missing Task Title."})
 		return
 	}
 
 	if newTask.Description == "" {
-		c.JSON(http.StatusBadRequest, gin.H{"message": "Missing Task Description"})
+		c.JSON(http.StatusBadRequest, gin.H{"message": "Missing Task Description."})
 		return
 	}
 
 	if newTask.Status == "" {
-		c.JSON(http.StatusBadRequest, gin.H{"message": "Missing Task Status"})
+		c.JSON(http.StatusBadRequest, gin.H{"message": "Missing Task Status."})
 		return
 	}
 
 	if newTask.DueDate.IsZero() {
-		c.JSON(http.StatusBadRequest, gin.H{"message": "Missing Due Date"})
+		c.JSON(http.StatusBadRequest, gin.H{"message": "Missing Due Date."})
 		return
 	}
 
