@@ -3,7 +3,6 @@ package data
 import (
 	"context"
 	"errors"
-	"log"
 	"time"
 
 	"github.com/Johna210/A2SV-Backend-Track/Track6_Task_Manager/models"
@@ -39,23 +38,53 @@ func comparePasswords(password string, hashedPassword string) error {
 	return nil
 }
 
-func Register(first_name, last_name, user_name, email, password, user_role string) (User, error) {
-	log.Println("Started data")
+func Register(user User) (User, error) {
 	var ctx, cancel = context.WithTimeout(context.Background(), 100*time.Second)
 	defer cancel()
-	var user User
-	hashedPassword, err := hashPassword(password)
+
+	// Check if email already taken
+	count, err := UserCollection.CountDocuments(ctx, bson.M{"email": user.Email})
+	if err != nil {
+		return User{}, errors.New("error occured while checking for email")
+	}
+
+	if count > 0 {
+		return User{}, errors.New("email already in use")
+	}
+
+	// Check if username already taken
+	count, err = UserCollection.CountDocuments(ctx, bson.M{"user_name": user.User_Name})
+	if err != nil {
+		return User{}, errors.New("error occured while checking for email")
+	}
+
+	if count > 0 {
+		return User{}, errors.New("userName already taken")
+	}
+
+	// Check if there is no any user in the data base and make the user admin else normal user.
+	count, err = UserCollection.CountDocuments(ctx, bson.M{})
+	if err != nil {
+		return User{}, errors.New("error occured while finding users")
+	}
+
+	// instantiate user_role to be User
+	userRole := "USER"
+	user.User_Role = &userRole
+
+	// make user_role to be ADMIN if there is no user exists
+	if count == 0 {
+		adminRole := "ADMIN"
+		user.User_Role = &adminRole
+	}
+
+	hashedPassword, err := hashPassword(*user.Password)
 
 	if err != nil {
 		return User{}, errors.New("unable to hash password")
 	}
 	// Create a user object for the db
-	user.First_Name = &first_name
-	user.Last_Name = &last_name
-	user.User_Name = &user_name
-	user.Email = &email
 	user.Password = &hashedPassword
-	user.User_Role = &user_role
 	user.Created_at, _ = time.Parse(time.RFC3339, time.Now().Format(time.RFC3339))
 	user.Updated_at, _ = time.Parse(time.RFC3339, time.Now().Format(time.RFC3339))
 	user.ID = primitive.NewObjectID()

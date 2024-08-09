@@ -1,17 +1,13 @@
 package controllers
 
 import (
-	"context"
 	"fmt"
-	"log"
 	"net/http"
-	"time"
 
 	"github.com/Johna210/A2SV-Backend-Track/Track6_Task_Manager/data"
 	"github.com/Johna210/A2SV-Backend-Track/Track6_Task_Manager/models"
 	"github.com/gin-gonic/gin"
 	"github.com/go-playground/validator"
-	"go.mongodb.org/mongo-driver/bson"
 )
 
 type Task = models.Task
@@ -19,10 +15,6 @@ type Task = models.Task
 var validate = validator.New()
 
 func RegisterUser(c *gin.Context) {
-	userCollection := data.UserCollection
-
-	var ctx, cancel = context.WithTimeout(context.Background(), 100*time.Second)
-	defer cancel()
 	var user models.User
 
 	if err := c.BindJSON(&user); err != nil {
@@ -36,57 +28,10 @@ func RegisterUser(c *gin.Context) {
 		return
 	}
 
-	log.Println("started in controller")
-	// Check if email already taken
-	count, err := userCollection.CountDocuments(ctx, bson.M{"email": user.Email})
-	if err != nil {
-		log.Println(err.Error())
-		// log.Panic(err)
-		c.JSON(http.StatusInternalServerError, gin.H{"error": "error occured while checking for email"})
-	}
-
-	if count > 0 {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "email already in use"})
-		return
-	}
-
-	// Check if username already taken
-	count, err = userCollection.CountDocuments(ctx, bson.M{"user_name": user.User_Name})
-	if err != nil {
-		log.Panic(err)
-		c.JSON(http.StatusInternalServerError, gin.H{"error": "error occured while checking for email"})
-	}
-
-	if count > 0 {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "user name already taken"})
-		return
-	}
-
-	// Check if there is no any user in the data base and make the user admin else normal user.
-	count, err = userCollection.CountDocuments(ctx, bson.M{})
-	if err != nil {
-		log.Panic(err)
-		c.JSON(http.StatusInternalServerError, gin.H{"error": "error occured while checking for email"})
-		return
-	}
-	// instantiate user_role to be User
-	userRole := "USER"
-	user.User_Role = &userRole
-
-	// make user_role to be ADMIN if there is no user exists
-	if count == 0 {
-		adminRole := "ADMIN"
-		user.User_Role = &adminRole
-	}
-
-	log.Println("reached here")
-	log.Println("reached here 22")
-
-	returnValue, err := data.Register(*user.First_Name, *user.Last_Name, *user.User_Name,
-		*user.Email, *user.Password, *user.User_Role)
+	returnValue, err := data.Register(user)
 
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": fmt.Sprintf("unable to register user: %v", err.Error())})
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
 
