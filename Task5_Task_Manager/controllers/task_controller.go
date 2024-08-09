@@ -13,7 +13,6 @@ import (
 )
 
 type Task = models.Task
-type TaskResponse = models.TaskResponse
 
 var taskManager *data.TaskManager
 
