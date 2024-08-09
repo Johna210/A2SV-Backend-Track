@@ -2,6 +2,7 @@ package data
 
 import (
 	"context"
+	"log"
 	"time"
 
 	"go.mongodb.org/mongo-driver/mongo"
@@ -41,4 +42,17 @@ func (db *Database) ConnectToMongoDB(uri, dbName string) (*Database, error) {
 		TaskCollection: TaskCollection,
 		UserCollection: UserCollection,
 	}, nil
+}
+
+// CloseDB closes the database connection.
+// It disconnects the client from the database and logs a message when the database is closed.
+// Returns an error if there was a problem disconnecting from the database.
+func (db *Database) CloseDB() error {
+	if err := db.Client.Disconnect(context.Background()); err != nil {
+		return err
+	}
+
+	log.Print("Database Closed")
+
+	return nil
 }
