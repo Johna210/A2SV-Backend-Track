@@ -87,4 +87,4 @@ There are Five Api End Points for this backend
 - Put http://localhost:4000/tasks/2 with a task request body - needed admin token
 - Delete http://localhost:4000/tasks/2 - needed admin token
 
-Detailed Api Documentation - https://documenter.getpostman.com/view/29564648/2sA3s1nXCt
+Detailed Api Documentation - https://documenter.getpostman.com/view/29564648/2sA3s3GqWn
