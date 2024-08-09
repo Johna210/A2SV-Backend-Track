@@ -13,7 +13,7 @@ type User struct {
 	User_Name  *string            `json:"user_name" validate:"required,min=5"`
 	Email      *string            `json:"email" validate:"email,required"`
 	Password   *string            `json:"password" validate:"required,min=6"`
-	User_Role  *string            `json:"user_role" validate:"required,eq=ADMIN|eq=USER"`
+	User_Role  *string            `json:"user_role" validate:"omitempty,eq=ADMIN|eq=USER"`
 	Created_at time.Time          `json:"created_at"`
 	Updated_at time.Time          `json:"updated_at"`
 }

@@ -3,6 +3,7 @@ package data
 import (
 	"context"
 	"errors"
+	"log"
 	"time"
 
 	"github.com/Johna210/A2SV-Backend-Track/Track6_Task_Manager/models"
@@ -18,8 +19,6 @@ type User = models.User
 var jwtSecret = []byte("JWT_SECRET_KEY")
 
 const tokenExpirationDuration = time.Hour * 24
-
-var UserCollection = DB.UserCollection
 
 func hashPassword(password string) (string, error) {
 	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
@@ -41,6 +40,7 @@ func comparePasswords(password string, hashedPassword string) error {
 }
 
 func Register(first_name, last_name, user_name, email, password, user_role string) (User, error) {
+	log.Println("Started data")
 	var ctx, cancel = context.WithTimeout(context.Background(), 100*time.Second)
 	defer cancel()
 	var user User
@@ -55,7 +55,7 @@ func Register(first_name, last_name, user_name, email, password, user_role strin
 	user.User_Name = &user_name
 	user.Email = &email
 	user.Password = &hashedPassword
-	user.User_Role = &user_name
+	user.User_Role = &user_role
 	user.Created_at, _ = time.Parse(time.RFC3339, time.Now().Format(time.RFC3339))
 	user.Updated_at, _ = time.Parse(time.RFC3339, time.Now().Format(time.RFC3339))
 	user.ID = primitive.NewObjectID()
@@ -102,4 +102,38 @@ func Login(user_name, password string) (string, error) {
 	}
 
 	return jwtToken, nil
+}
+
+func Promote(id string) error {
+	var ctx, cancel = context.WithTimeout(context.Background(), 100*time.Second)
+	defer cancel()
+
+	ObjectId, err := ChangeIdToObjectId(id)
+	if err != nil {
+		return err
+	}
+
+	var user User
+	err = UserCollection.FindOne(ctx, bson.M{"_id": ObjectId}).Decode(&user)
+
+	if err != nil {
+		return err
+	}
+
+	// Update the user's role to ADMIN
+	var adminRole = "ADMIN"
+	user.User_Role = &adminRole
+
+	// Save the updated user back to the database
+	_, err = UserCollection.UpdateOne(
+		ctx,
+		bson.M{"_id": ObjectId},
+		bson.M{"$set": bson.M{"user_role": user.User_Role}},
+	)
+	if err != nil {
+		return err
+	}
+
+	return nil
+
 }

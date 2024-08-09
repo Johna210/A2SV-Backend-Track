@@ -14,13 +14,11 @@ import (
 
 type Task = models.Task
 
-var tm = DB
-
 // changeIdToObjectId converts a string representation of an ObjectID to a primitive.ObjectID.
 // It takes a string `id` as input and returns a primitive.ObjectID and an error.
 // If the conversion is successful, it returns the converted ObjectID and a nil error.
 // If the conversion fails, it returns an empty ObjectID and an error indicating an invalid id format.
-func changeIdToObjectId(id string) (primitive.ObjectID, error) {
+func ChangeIdToObjectId(id string) (primitive.ObjectID, error) {
 	objectID, err := primitive.ObjectIDFromHex(id)
 	if err != nil {
 		return primitive.ObjectID{}, errors.New("invalid id format")
@@ -33,7 +31,7 @@ func changeIdToObjectId(id string) (primitive.ObjectID, error) {
 // It returns a slice of Task and an error, if any.
 func GetTasks() ([]Task, error) {
 
-	cursor, err := tm.TaskCollection.Find(context.TODO(), bson.D{})
+	cursor, err := TaskCollection.Find(context.TODO(), bson.D{})
 	if err != nil {
 		return nil, err
 	}
@@ -52,13 +50,16 @@ func GetTasks() ([]Task, error) {
 // The Task contains the details of the added task.
 // If an error occurs during the insertion or decoding process, an empty Task and the error are returned.
 func AddTask(newTask Task) (Task, error) {
-	response, err := tm.TaskCollection.InsertOne(context.TODO(), newTask)
+	// Set the ID field to a new ObjectID
+	newTask.ID = primitive.NewObjectID()
+
+	response, err := TaskCollection.InsertOne(context.TODO(), newTask)
 	if err != nil {
 		return Task{}, err
 	}
 
-	newTaskID := response.InsertedID
-	res := tm.TaskCollection.FindOne(context.TODO(), bson.M{"_id": newTaskID})
+	newTaskID := response.InsertedID.(primitive.ObjectID)
+	res := TaskCollection.FindOne(context.TODO(), bson.M{"_id": newTaskID})
 
 	var task Task
 	if err := res.Decode(&task); err != nil {
@@ -73,7 +74,7 @@ func AddTask(newTask Task) (Task, error) {
 // It takes a newTask object containing the updated task details and the ID of the task to be updated.
 // It returns a Task object containing the updated task and an error if any.
 func UpdateTask(newTask Task, id string) (Task, error) {
-	objectID, err := changeIdToObjectId(id)
+	objectID, err := ChangeIdToObjectId(id)
 	if err != nil {
 		return Task{}, err
 	}
@@ -92,7 +93,7 @@ func UpdateTask(newTask Task, id string) (Task, error) {
 		updateFields["description"] = newTask.Description
 	}
 
-	result, err := tm.TaskCollection.UpdateOne(
+	result, err := TaskCollection.UpdateOne(
 		context.TODO(),
 		bson.M{"_id": objectID},
 		bson.M{"$set": updateFields},
@@ -109,7 +110,7 @@ func UpdateTask(newTask Task, id string) (Task, error) {
 	}
 
 	var updatedTask Task
-	err = tm.TaskCollection.FindOne(context.TODO(), bson.M{"_id": objectID}).Decode(&updatedTask)
+	err = TaskCollection.FindOne(context.TODO(), bson.M{"_id": objectID}).Decode(&updatedTask)
 	if err != nil {
 		return Task{}, err
 	}
@@ -122,14 +123,14 @@ func UpdateTask(newTask Task, id string) (Task, error) {
 // If the task is found, the Task is populated with the task details.
 // If the task is not found, it returns an empty Task and an error indicating that no task was found with the given ID.
 func GetTask(id string) (Task, error) {
-	objectID, err := changeIdToObjectId(id)
+	objectID, err := ChangeIdToObjectId(id)
 	if err != nil {
 		return Task{}, err
 	}
 
 	var task Task
 
-	result := tm.TaskCollection.FindOne(context.TODO(), bson.M{"_id": objectID})
+	result := TaskCollection.FindOne(context.TODO(), bson.M{"_id": objectID})
 
 	if err := result.Decode(&task); err != nil {
 		if err == mongo.ErrNoDocuments {
@@ -145,12 +146,12 @@ func GetTask(id string) (Task, error) {
 // If the task with the given ID is not found, it returns an error with the message "no task found with the given ID".
 // If the task is successfully deleted, it returns nil.
 func RemoveTask(id string) error {
-	objectID, err := changeIdToObjectId(id)
+	objectID, err := ChangeIdToObjectId(id)
 	if err != nil {
 		return err
 	}
 
-	response, err := tm.TaskCollection.DeleteOne(context.TODO(), bson.M{"_id": objectID})
+	response, err := TaskCollection.DeleteOne(context.TODO(), bson.M{"_id": objectID})
 
 	if err != nil {
 		if err == mongo.ErrNoDocuments {

@@ -1,19 +1,29 @@
 package main
 
-import "time"
+import (
+	"log"
 
-type TaskStatus string
-
-const (
-	NotStarted TaskStatus = "Not Started"
-	Started    TaskStatus = "Started"
-	Completed  TaskStatus = "Completed"
+	"github.com/Johna210/A2SV-Backend-Track/Track6_Task_Manager/data"
+	routes "github.com/Johna210/A2SV-Backend-Track/Track6_Task_Manager/router"
+	"github.com/gin-gonic/gin"
 )
 
-// Task struct for creating a new Task
-type Task struct {
-	Title       string     `json:"title" bson:"title"`
-	Description string     `json:"description" bson:"description"`
-	Status      TaskStatus `json:"status" bson:"status"`
-	DueDate     time.Time  `json:"due_date" bson:"due_date"`
+// func init() {
+// }
+
+func main() {
+	data.Init()
+
+	// Close DB after finished
+	defer func() {
+		if err := data.CloseDB(); err != nil {
+			log.Fatal(err)
+		}
+	}()
+
+	router := gin.Default()
+
+	routes.Routes(router)
+
+	router.Run(":4000")
 }

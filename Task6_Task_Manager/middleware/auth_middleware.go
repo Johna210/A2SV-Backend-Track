@@ -43,6 +43,28 @@ func AuthMiddleware() gin.HandlerFunc {
 			return
 		}
 
+		claims, ok := token.Claims.(jwt.MapClaims)
+		if !ok || !token.Valid {
+			c.JSON(http.StatusUnauthorized, gin.H{"error": "Invalid JWT claims"})
+			c.Abort()
+			return
+		}
+
+		userRole, ok := claims["role"].(string)
+		if !ok {
+			c.JSON(http.StatusUnauthorized, gin.H{"error": "User not allowed"})
+			c.Abort()
+			return
+		}
+
+		if userRole == "USER" {
+			c.JSON(http.StatusUnauthorized, gin.H{"error": "User not allowed"})
+			c.Abort()
+			return
+		}
+
+		c.Set("User_Role", userRole)
+
 		c.Next()
 	}
 }

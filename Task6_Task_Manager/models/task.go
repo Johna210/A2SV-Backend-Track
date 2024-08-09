@@ -16,7 +16,7 @@ const (
 
 // Task struct for creating a new Task
 type Task struct {
-	ID          primitive.ObjectID `json:"id" bson:"_id"`
+	ID          primitive.ObjectID `bson:"_id"`
 	Title       string             `json:"title" bson:"title"`
 	Description string             `json:"description" bson:"description"`
 	Status      TaskStatus         `json:"status" bson:"status" validate:"required,eq=Not Started|eq=Started|eq=Completed"`
