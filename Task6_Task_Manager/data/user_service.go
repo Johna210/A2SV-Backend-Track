@@ -19,6 +19,10 @@ var jwtSecret = []byte("JWT_SECRET_KEY")
 
 const tokenExpirationDuration = time.Hour * 24
 
+// hashPassword takes a password string and returns the hashed version of the password.
+// It uses bcrypt.GenerateFromPassword to generate the hash with the default cost.
+// If an error occurs during the hashing process, it returns an empty string and an error.
+// Otherwise, it returns the hashed password as a string and a nil error.
 func hashPassword(password string) (string, error) {
 	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
 	if err != nil {
@@ -28,6 +32,15 @@ func hashPassword(password string) (string, error) {
 	return string(hashedPassword), nil
 }
 
+// comparePasswords compares a plain text password with a hashed password and returns an error if they do not match.
+// It uses bcrypt.CompareHashAndPassword to perform the comparison.
+//
+// Parameters:
+// - password: The plain text password to compare.
+// - hashedPassword: The hashed password to compare against.
+//
+// Returns:
+// - error: An error if the passwords do not match, nil otherwise.
 func comparePasswords(password string, hashedPassword string) error {
 	err := bcrypt.CompareHashAndPassword([]byte(hashedPassword), []byte(password))
 
@@ -38,6 +51,13 @@ func comparePasswords(password string, hashedPassword string) error {
 	return nil
 }
 
+// Register registers a new user in the system.
+// It checks if the email and username are already taken.
+// If there are no existing users, the registered user is assigned the role of an admin.
+// The user's password is hashed before storing it in the database.
+// The created user object is then inserted into the UserCollection.
+// If any error occurs during the registration process, an error is returned.
+// Otherwise, the registered user is returned along with a nil error.
 func Register(user User) (User, error) {
 	var ctx, cancel = context.WithTimeout(context.Background(), 100*time.Second)
 	defer cancel()
@@ -98,6 +118,11 @@ func Register(user User) (User, error) {
 
 }
 
+// Login authenticates a user by their username and password and generates a JWT token upon successful authentication.
+// It takes the user_name and password as input parameters and returns the generated JWT token as a string and an error, if any.
+// If the user is not found, it returns an error with the message "user not found".
+// If the username or password is incorrect, it returns an error with the message "incorrect username or password".
+// If there is an error while generating the token, it returns an error with the message "unable to generate token".
 func Login(user_name, password string) (string, error) {
 	var ctx, cancel = context.WithTimeout(context.Background(), 100*time.Second)
 	defer cancel()
@@ -133,6 +158,9 @@ func Login(user_name, password string) (string, error) {
 	return jwtToken, nil
 }
 
+// Promote promotes a user to an admin role.
+// It takes the user's ID as a parameter and updates the user's role to "ADMIN" in the database.
+// If the user ID is invalid or there is an error in updating the user's role, an error is returned.
 func Promote(id string) error {
 	var ctx, cancel = context.WithTimeout(context.Background(), 100*time.Second)
 	defer cancel()

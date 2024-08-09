@@ -14,6 +14,12 @@ type Task = models.Task
 
 var validate = validator.New()
 
+// RegisterUser is a function that handles the registration of a user.
+// It takes a gin.Context object as a parameter and expects the user information to be provided in the request body as JSON.
+// The function first binds the JSON data to a models.User struct and performs validation on the user data.
+// If the data is valid, it calls the data.Register function to register the user.
+// The function returns a JSON response with the registered user's data and a success message if the registration is successful.
+// If there are any errors during the registration process, appropriate error messages are returned in the JSON response.
 func RegisterUser(c *gin.Context) {
 	var user models.User
 
@@ -38,6 +44,11 @@ func RegisterUser(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"message": "user registered successfully", "data": returnValue})
 }
 
+// LoginUser handles the login functionality for a user.
+// It expects a JSON payload containing the user's username and password.
+// If the payload is valid, it attempts to authenticate the user and generate a token.
+// If successful, it returns the generated token in the response body.
+// If there are any errors during the process, it returns an error message in the response body.
 func LoginUser(c *gin.Context) {
 	var user models.User
 
@@ -56,6 +67,10 @@ func LoginUser(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"token": token})
 }
 
+// Promote promotes a user identified by the given ID.
+// It retrieves the ID from the request context and calls the data.Promote function to perform the promotion.
+// If an error occurs while retrieving the ID or promoting the user, it returns a JSON response with the corresponding error message.
+// If the promotion is successful, it returns a JSON response with the message "user promoted" and a status code of 200.
 func Promote(c *gin.Context) {
 	id, err := idHelper(c)
 

@@ -11,6 +11,12 @@ import (
 
 var jwtSecret = []byte("JWT_SECRET_KEY")
 
+// AuthMiddleware is a middleware function that handles authentication for incoming requests.
+// It checks for the presence of an Authorization header and validates the JWT token.
+// If the token is valid, it extracts the user role from the token claims and sets it in the context.
+// If the token is invalid or the user role is not allowed, it returns an error response and aborts the request.
+// This middleware should be used to protect routes that require authentication.
+
 func AuthMiddleware() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		authHeader := c.GetHeader("Authorization")

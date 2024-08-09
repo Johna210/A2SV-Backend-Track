@@ -14,6 +14,10 @@ var (
 	TaskCollection *mongo.Collection
 )
 
+// Init initializes the database connection and assigns the collections.
+// It connects to the MongoDB server running on localhost:27017 and checks the connection.
+// If the connection is successful, it assigns the UserCollection and TaskCollection variables to their respective collections in the "taskManager" database.
+// This function should be called before performing any database operations.
 func Init() {
 	// Initialize the database connection
 	clientOptions := options.Client().ApplyURI("mongodb://localhost:27017")
