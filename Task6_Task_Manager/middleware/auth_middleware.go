@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"net/http"
 	"strings"
+	"time"
 
 	"github.com/gin-gonic/gin"
 	"github.com/golang-jwt/jwt"
@@ -56,21 +57,20 @@ func AuthMiddleware() gin.HandlerFunc {
 			return
 		}
 
-		userRole, ok := claims["role"].(string)
-		if !ok {
-			c.JSON(http.StatusUnauthorized, gin.H{"error": "User not allowed"})
+		// Check for token expiration
+		if exp, ok := claims["exp"].(float64); ok {
+			if time.Unix(int64(exp), 0).Before(time.Now()) {
+				c.JSON(http.StatusUnauthorized, gin.H{"error": "JWT has expired"})
+				c.Abort()
+				return
+			}
+		} else {
+			c.JSON(http.StatusUnauthorized, gin.H{"error": "Invalid JWT claims"})
 			c.Abort()
 			return
 		}
 
-		if userRole == "USER" {
-			c.JSON(http.StatusUnauthorized, gin.H{"error": "User not allowed"})
-			c.Abort()
-			return
-		}
-
-		c.Set("User_Role", userRole)
-
+		c.Set("claims", claims)
 		c.Next()
 	}
 }

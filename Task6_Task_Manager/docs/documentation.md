@@ -37,7 +37,7 @@ This project is an API for a task manager application that has all the needed en
 1. Clone the repository:
 
 ```sh
-git clone https://github.com/Johna210/A2SV-Backend-Track/Track4_Task_Manager.git
+git clone https://github.com/Johna210/A2SV-Backend-Track/Track6_Task_Manager.git
 cd A2SV-Backend-Track/Track3
 
 ```

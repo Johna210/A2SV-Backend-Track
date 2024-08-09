@@ -9,10 +9,10 @@ import (
 func Routes(router *gin.Engine) {
 	router.POST("/user/register", controller.RegisterUser)
 	router.POST("/user/login", controller.LoginUser)
-	router.GET("/tasks", controller.GetTasksController)
-	router.GET("/tasks/:id", controller.GetTaskController)
-	router.POST("/tasks", middleware.AuthMiddleware(), controller.AddTaskController)
-	router.PUT("/tasks/:id", middleware.AuthMiddleware(), controller.UpdateTaskController)
-	router.DELETE("/tasks/:id", middleware.AuthMiddleware(), controller.DeleteTaskController)
-	router.PUT("/user/promote/:id", middleware.AuthMiddleware(), controller.Promote)
+	router.GET("/tasks", middleware.AuthMiddleware(), controller.GetTasksController)
+	router.GET("/tasks/:id", middleware.AuthMiddleware(), controller.GetTaskController)
+	router.POST("/tasks", middleware.AuthMiddleware(), middleware.AdminMiddleware(), controller.AddTaskController)
+	router.PUT("/tasks/:id", middleware.AuthMiddleware(), middleware.AdminMiddleware(), controller.UpdateTaskController)
+	router.DELETE("/tasks/:id", middleware.AuthMiddleware(), middleware.AdminMiddleware(), controller.DeleteTaskController)
+	router.PUT("/user/promote/:id", middleware.AuthMiddleware(), middleware.AdminMiddleware(), controller.Promote)
 }
