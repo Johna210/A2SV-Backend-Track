@@ -20,8 +20,8 @@ type User struct {
 }
 
 type UserRepository interface {
-	CreateUser(c context.Context, user *User) (User, error)
+	CreateUser(c context.Context, user *User) error
 	Fetch(c context.Context) ([]User, error)
-	GetByID(c context.Context, id primitive.ObjectID) (User, error)
+	GetByID(c context.Context, id string) (User, error)
 	GetByEmail(c context.Context, email string) (User, error)
 }
