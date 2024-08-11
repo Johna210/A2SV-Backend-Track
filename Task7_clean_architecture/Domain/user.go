@@ -23,5 +23,6 @@ type UserRepository interface {
 	CreateUser(c context.Context, user *User) error
 	Fetch(c context.Context) ([]User, error)
 	GetByID(c context.Context, id string) (User, error)
+	GetByUsername(c context.Context, userName string) (User, error)
 	GetByEmail(c context.Context, email string) (User, error)
 }
