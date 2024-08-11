@@ -37,3 +37,11 @@ type TaskRepository interface {
 	UpdateTask(c context.Context, task *TaskUpdate, id string) (Task, error)
 	DeleteTask(c context.Context, id string) error
 }
+
+type TaskUsecase interface {
+	CreateTask(c context.Context, task *Task) error
+	Fetch(c context.Context) ([]Task, error)
+	GetByID(c context.Context, id string) (Task, error)
+	UpdateTask(c context.Context, task *TaskUpdate, id string) (Task, error)
+	DeleteTask(c context.Context, id string) error
+}
