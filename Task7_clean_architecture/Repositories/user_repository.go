@@ -1,6 +1,8 @@
 package repositories
 
 import (
+	"fmt"
+
 	domain "github.com/Johna210/A2SV-Backend-Track/Track7_clean_architecture/Domain"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
@@ -53,7 +55,7 @@ func (ur *userRepository) GetByID(c context.Context, id string) (domain.User, er
 	var user domain.User
 	idHex, err := primitive.ObjectIDFromHex(id)
 	if err != nil {
-		return user, err
+		return user, fmt.Errorf("user not found")
 	}
 
 	err = collection.FindOne(c, bson.D{{Key: "_id", Value: idHex}}).Decode(&user)
@@ -73,4 +75,71 @@ func (ur *userRepository) GetByUsername(c context.Context, userName string) (dom
 	var user domain.User
 	err := collection.FindOne(c, bson.D{{Key: "user_name", Value: userName}}).Decode(&user)
 	return user, err
+}
+
+func (ur *userRepository) UpdateUser(c context.Context, id string, user domain.UserUpdate) (domain.User, error) {
+	collection := ur.database.Collection(ur.collection)
+
+	updateFields := make(bson.M)
+	if user.First_Name != nil {
+		updateFields["first_name"] = user.First_Name
+	}
+	if user.Last_Name != nil {
+		updateFields["last_name"] = user.Last_Name
+	}
+	if user.User_Name != nil {
+		updateFields["user_name"] = user.User_Name
+	}
+	if user.Email != nil {
+		updateFields["email"] = user.Email
+	}
+	if user.Password != nil {
+		updateFields["password"] = user.Password
+	}
+	if user.User_Role != nil {
+		updateFields["user_role"] = user.User_Role
+	}
+
+	var updatedUser domain.User
+	idHex, err := primitive.ObjectIDFromHex(id)
+	if err != nil {
+		return updatedUser, fmt.Errorf("user not found")
+	}
+
+	update := bson.D{{Key: "$set", Value: updateFields}}
+	result, err := collection.UpdateOne(
+		c,
+		bson.D{{Key: "_id", Value: idHex}},
+		update,
+	)
+
+	if err != nil {
+		return updatedUser, err
+	}
+
+	if result.MatchedCount == 0 {
+		return domain.User{}, fmt.Errorf("no user found with the given ID")
+	}
+
+	err = collection.FindOne(c, bson.D{{Key: "_id", Value: idHex}}).Decode(&updatedUser)
+	if err != nil {
+		return domain.User{}, err
+	}
+
+	return updatedUser, nil
+
+}
+
+func (ur *userRepository) Promote(c context.Context, id string) (domain.User, error) {
+	admin := "ADMIN"
+	newUser := domain.UserUpdate{
+		User_Role: &admin,
+	}
+
+	updatedUser, err := ur.UpdateUser(c, id, newUser)
+	if err != nil {
+		return domain.User{}, fmt.Errorf("unable to promote user")
+	}
+
+	return updatedUser, nil
 }
