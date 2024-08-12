@@ -17,5 +17,5 @@ func NewPromoteRoute(env *bootstrap.Env, timeout time.Duration, db mongo.Databas
 		UserUsecase: usecases.NewPromoteUsecase(ur, timeout),
 		Env:         env,
 	}
-	group.POST("/user/promote", pc.Promote)
+	group.PUT("/user/promote/:id", pc.Promote)
 }

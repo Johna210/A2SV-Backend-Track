@@ -15,6 +15,9 @@ type taskRepository struct {
 	collection string
 }
 
+// NewTaskRepository creates a new instance of the TaskRepository interface.
+// It takes a mongo.Database and a collection name as parameters and returns a pointer to a taskRepository struct.
+// The taskRepository struct implements the TaskRepository interface and provides methods for interacting with the database.
 func NewTaskRepository(db mongo.Database, collection string) domain.TaskRepository {
 	return &taskRepository{
 		database:   db,
@@ -22,6 +25,10 @@ func NewTaskRepository(db mongo.Database, collection string) domain.TaskReposito
 	}
 }
 
+// CreateTask creates a new task in the repository.
+// It takes a context.Context and a *domain.Task as parameters.
+// The task is inserted into the collection specified in the taskRepository struct.
+// Returns an error if there was a problem inserting the task.
 func (tr *taskRepository) CreateTask(c context.Context, task *domain.Task) error {
 	collection := tr.database.Collection(tr.collection)
 
@@ -33,6 +40,8 @@ func (tr *taskRepository) CreateTask(c context.Context, task *domain.Task) error
 	return nil
 }
 
+// Fetch retrieves all tasks from the database.
+// It returns a slice of domain.Task and an error if any.
 func (tr *taskRepository) Fetch(c context.Context) ([]domain.Task, error) {
 	collection := tr.database.Collection(tr.collection)
 
@@ -50,6 +59,9 @@ func (tr *taskRepository) Fetch(c context.Context) ([]domain.Task, error) {
 	return tasks, err
 }
 
+// GetByID retrieves a task from the database by its ID.
+// It takes a context.Context and the ID of the task as parameters.
+// It returns the retrieved task and an error, if any.
 func (tr *taskRepository) GetByID(c context.Context, id string) (domain.Task, error) {
 	collection := tr.database.Collection(tr.collection)
 
@@ -63,6 +75,9 @@ func (tr *taskRepository) GetByID(c context.Context, id string) (domain.Task, er
 	return task, err
 }
 
+// UpdateTask updates a task in the repository with the given ID.
+// It takes a context, a TaskUpdate object containing the updated task fields, and the ID of the task to update.
+// It returns the updated task and an error if any.
 func (tr *taskRepository) UpdateTask(c context.Context, task *domain.TaskUpdate, id string) (domain.Task, error) {
 	collection := tr.database.Collection(tr.collection)
 
@@ -107,6 +122,9 @@ func (tr *taskRepository) UpdateTask(c context.Context, task *domain.TaskUpdate,
 	return taskResponse, nil
 }
 
+// DeleteTask deletes a task from the database.
+// It takes a context.Context and the ID of the task to be deleted as parameters.
+// It returns an error if the deletion fails.
 func (tr *taskRepository) DeleteTask(c context.Context, id string) error {
 	collection := tr.database.Collection(tr.collection)
 

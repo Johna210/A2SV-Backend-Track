@@ -1,7 +1,6 @@
 package middleware
 
 import (
-	"log"
 	"net/http"
 	"strings"
 
@@ -40,14 +39,13 @@ func AuthMiddleware(env *bootstrap.Env) gin.HandlerFunc {
 			return
 		}
 
-		authorized, err := infrastructure.CheckTokenExpiry(authParts[1], string(env.AccessTokenSecret))
+		authorized, _ := infrastructure.CheckTokenExpiry(authParts[1], string(env.AccessTokenSecret))
 		if !authorized {
-			c.JSON(http.StatusUnauthorized, gin.H{"error": err.Error()})
+			c.JSON(http.StatusUnauthorized, gin.H{"error": "token expired."})
 			c.Abort()
 			return
 		}
 		claims, err := infrastructure.ExtractClaims(authParts[1], string(env.AccessTokenSecret))
-		log.Printf("claims is here %v", claims)
 		if err != nil {
 			c.JSON(http.StatusUnauthorized, gin.H{"error": err.Error()})
 			c.Abort()
