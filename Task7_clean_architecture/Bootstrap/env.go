@@ -1,5 +1,11 @@
 package bootstrap
 
+import (
+	"log"
+
+	"github.com/spf13/viper"
+)
+
 type Env struct {
 	AppEnv                string `mapstructure:"APP_ENV"`
 	ServerAddress         string `mapstructure:"SERVER_ADDRESS"`
@@ -14,17 +20,22 @@ type Env struct {
 }
 
 func NewEnv() *Env {
-	env := Env{
-		AppEnv:                "development",
-		ServerAddress:         "localhost:4000",
-		ContextTimeout:        100,
-		DBHost:                "localhost",
-		DBPort:                "27017",
-		DBUser:                "",
-		DBPass:                "",
-		DBName:                "taskManager",
-		AccessTokenExpiryHour: 24,
-		AccessTokenSecret:     "asfgherhwegsdcvds",
+	env := Env{}
+
+	viper.SetConfigFile("../")
+
+	err := viper.ReadInConfig()
+	if err != nil {
+		log.Fatal("Can't find the file .env")
+	}
+
+	err = viper.Unmarshal(&env)
+	if err != nil {
+		log.Fatal("Environment can't be loaded: ", err)
+	}
+
+	if env.AppEnv == "development" {
+		log.Panicln("The App is running in development env")
 	}
 
 	return &env
