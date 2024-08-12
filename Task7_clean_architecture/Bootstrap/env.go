@@ -22,7 +22,7 @@ func NewEnv() *Env {
 		DBPort:                "27017",
 		DBUser:                "",
 		DBPass:                "",
-		DBName:                "tasks",
+		DBName:                "taskManager",
 		AccessTokenExpiryHour: 24,
 		AccessTokenSecret:     "asfgherhwegsdcvds",
 	}
