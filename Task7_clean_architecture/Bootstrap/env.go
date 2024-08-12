@@ -22,7 +22,7 @@ type Env struct {
 func NewEnv() *Env {
 	env := Env{}
 
-	viper.SetConfigFile("../")
+	viper.SetConfigFile(".env")
 
 	err := viper.ReadInConfig()
 	if err != nil {
@@ -35,7 +35,7 @@ func NewEnv() *Env {
 	}
 
 	if env.AppEnv == "development" {
-		log.Panicln("The App is running in development env")
+		log.Println("The App is running in development env")
 	}
 
 	return &env
