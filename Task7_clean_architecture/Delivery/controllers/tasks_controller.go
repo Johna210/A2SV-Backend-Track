@@ -37,7 +37,6 @@ func (tc *TaskController) Fetch(c *gin.Context) {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
-
 	c.JSON(http.StatusOK, tasks)
 }
 
@@ -75,6 +74,7 @@ func (tc *TaskController) GetTaskByID(c *gin.Context) {
 
 	if task.Title == "" {
 		c.JSON(http.StatusNotFound, gin.H{"message": "task with the given id not found"})
+		return
 	}
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})

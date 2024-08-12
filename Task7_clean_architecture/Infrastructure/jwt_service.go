@@ -64,7 +64,7 @@ func ExtractIDFromToken(tokenString string, secret string) (string, error) {
 	return claims["UserID"].(string), nil
 }
 
-func ExtractClaims(tokenString string, secret string) (map[string]string, error) {
+func ExtractClaims(tokenString string, secret string) (map[string]interface{}, error) {
 	token, err := jwt.Parse(tokenString, func(t *jwt.Token) (interface{}, error) {
 		if _, ok := t.Method.(*jwt.SigningMethodHMAC); !ok {
 			return nil, fmt.Errorf("unexpected signing method: %v", t.Header["alg"])
@@ -76,11 +76,11 @@ func ExtractClaims(tokenString string, secret string) (map[string]string, error)
 		return nil, fmt.Errorf("invalid token")
 	}
 
-	claims := make(map[string]string)
-	claims["UserID"] = token.Claims.(jwt.MapClaims)["UserID"].(string)
-	claims["UserName"] = token.Claims.(jwt.MapClaims)["UserName"].(string)
-	claims["Role"] = token.Claims.(jwt.MapClaims)["Role"].(string)
-	claims["exp"] = token.Claims.(jwt.MapClaims)["exp"].(string)
+	claims := make(map[string]interface{})
+	claims["UserID"] = token.Claims.(jwt.MapClaims)["user_id"].(string)
+	claims["UserName"] = token.Claims.(jwt.MapClaims)["user_name"].(string)
+	claims["Role"] = token.Claims.(jwt.MapClaims)["role"].(string)
+	claims["exp"] = token.Claims.(jwt.MapClaims)["exp"].(float64)
 
 	return claims, nil
 }

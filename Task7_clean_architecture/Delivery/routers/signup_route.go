@@ -17,5 +17,5 @@ func NewSignupRoute(env *bootstrap.Env, timeout time.Duration, db mongo.Database
 		SignupUsecase: usecases.NewSignupUsecase(ur, timeout),
 		Env:           env,
 	}
-	group.POST("/user/signup", sc.Signup)
+	group.POST("/user/register", sc.Signup)
 }

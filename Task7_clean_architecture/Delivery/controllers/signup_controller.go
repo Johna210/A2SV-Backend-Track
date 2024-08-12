@@ -26,13 +26,13 @@ func (sc *SignupController) Signup(c *gin.Context) {
 	}
 
 	_, err = sc.SignupUsecase.GetUserByEmail(c, request.Email)
-	if err != nil {
+	if err == nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Email already exists"})
 		return
 	}
 
 	_, err = sc.SignupUsecase.GetUserByUsername(c, request.User_Name)
-	if err != nil {
+	if err == nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Username already exists"})
 		return
 	}

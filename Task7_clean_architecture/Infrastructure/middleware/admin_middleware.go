@@ -2,6 +2,7 @@ package middleware
 
 import (
 	"net/http"
+	"strings"
 
 	"github.com/gin-gonic/gin"
 )
@@ -21,8 +22,9 @@ func AdminMiddleware() gin.HandlerFunc {
 			c.Abort()
 			return
 		}
+		roleStr, _ := userRole.(string)
 
-		if userRole == "USER" {
+		if strings.ToUpper(roleStr) != "ADMIN" {
 			c.JSON(http.StatusUnauthorized, gin.H{"error": "User not allowed"})
 			c.Abort()
 			return

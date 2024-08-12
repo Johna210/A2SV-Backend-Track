@@ -36,7 +36,7 @@ func (tr *taskRepository) CreateTask(c context.Context, task *domain.Task) error
 func (tr *taskRepository) Fetch(c context.Context) ([]domain.Task, error) {
 	collection := tr.database.Collection(tr.collection)
 
-	cursor, err := collection.Find(c, nil)
+	cursor, err := collection.Find(c, bson.D{})
 	if err != nil {
 		return nil, err
 	}
@@ -58,7 +58,8 @@ func (tr *taskRepository) GetByID(c context.Context, id string) (domain.Task, er
 	if err != nil {
 		return task, err
 	}
-	err = collection.FindOne(c, idHex).Decode(&task)
+
+	err = collection.FindOne(c, bson.M{"_id": idHex}).Decode(&task)
 	return task, err
 }
 

@@ -29,7 +29,7 @@ func (lc *LoginController) Login(c *gin.Context) {
 		return
 	}
 
-	err = infrastructure.ComparePasswords(*user.Password, request.Password)
+	err = infrastructure.ComparePasswords(request.Password, *user.Password)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid password"})
 		return

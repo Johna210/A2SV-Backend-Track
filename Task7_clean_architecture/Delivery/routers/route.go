@@ -25,6 +25,6 @@ func Setup(env *bootstrap.Env, timeout time.Duration, db mongo.Database, gin *gi
 	protectedAdminRouter := gin.Group("")
 	protectedAdminRouter.Use(middleware.AuthMiddleware(env))
 	protectedAdminRouter.Use(middleware.AdminMiddleware())
-	NewPromoteRoute(env, timeout, db, publicRouter)
-	NewTaskAdminRoute(env, timeout, db, publicRouter)
+	NewPromoteRoute(env, timeout, db, protectedAdminRouter)
+	NewTaskAdminRoute(env, timeout, db, protectedAdminRouter)
 }

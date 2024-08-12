@@ -3,8 +3,7 @@ package domain
 import "context"
 
 type LoginRequest struct {
-	UserName string `json:"userName" binding:"required"`
-	//Email    string `json:"email" binding:"required,email"`
+	UserName string `json:"user_name" binding:"required"`
 	Password string `json:"password" binding:"required,min=6"`
 }
 
