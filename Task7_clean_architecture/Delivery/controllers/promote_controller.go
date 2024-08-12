@@ -21,20 +21,15 @@ func (pc *PromoteController) Promote(c *gin.Context) {
 		return
 	}
 
-	user, err := pc..GetUserByUsername(c, request.UserName)
+	user, err := pc.UserUsecase.Promote(c, id)
 	if err != nil {
-		c.JSON(400, gin.H{"error": "User not found"})
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
 
-	userRole := "Admin"
-	user.User_Role = &userRole
+	var response = make(map[string]interface{})
+	response["message"] = "User promoted successfully"
+	response["user"] = user
 
-	err = pc.UserUsecase.UpdateUser(c, &user)
-	if err != nil {
-		c.JSON(500, gin.H{"error": err.Error()})
-		return
-	}
-
-	c.JSON(200, gin.H{"message": "User promoted successfully"})
+	c.JSON(http.StatusOK, response)
 }
