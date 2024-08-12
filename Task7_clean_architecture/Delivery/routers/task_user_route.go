@@ -11,12 +11,12 @@ import (
 	"go.mongodb.org/mongo-driver/mongo"
 )
 
-func NewTaskAdminRoute(env *bootstrap.Env, timeout time.Duration, db mongo.Database, group *gin.RouterGroup) {
+func NewTaskUserRoute(env *bootstrap.Env, timeout time.Duration, db mongo.Database, group *gin.RouterGroup) {
 	tr := repositories.NewTaskRepository(db, "tasks")
 	tc := controllers.TaskController{
 		TaskUsecase: usecases.NewTaskUsecase(tr, timeout),
 	}
-	group.POST("/tasks", tc.Create)
-	group.PUT("/tasks/:id", tc.UpdateTask)
-	group.DELETE("/tasks/:id", tc.DeleteTask)
+
+	group.GET("/tasks", tc.Fetch)
+	group.GET("/tasks/:id", tc.GetTaskByID)
 }
