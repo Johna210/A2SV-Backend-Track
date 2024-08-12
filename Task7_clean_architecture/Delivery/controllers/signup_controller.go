@@ -16,6 +16,10 @@ type SignupController struct {
 	Env           *bootstrap.Env
 }
 
+// Signup handles the signup request and creates a new user.
+// It expects a JSON payload containing the user's signup details.
+// If the request is valid and the user does not already exist, it creates a new user and returns a success response.
+// If the request is invalid or the user already exists, it returns an appropriate error response.
 func (sc *SignupController) Signup(c *gin.Context) {
 	var request domain.SignupRequest
 
@@ -44,7 +48,7 @@ func (sc *SignupController) Signup(c *gin.Context) {
 	}
 
 	request.Password = encryptedPassword
-	userRole := "User"
+	userRole := "USER"
 
 	user := domain.User{
 		ID:         primitive.NewObjectID(),
