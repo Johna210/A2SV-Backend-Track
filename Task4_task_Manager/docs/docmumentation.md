@@ -1,7 +1,7 @@
 ## Project structure
 
 ```
-library_management/
+TaskManager/
 ├── main.go
 ├── controllers/
 │   └── task_controller.go
