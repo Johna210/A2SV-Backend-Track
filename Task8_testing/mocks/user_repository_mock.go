@@ -9,35 +9,13 @@ type UserRepositoryMock struct {
 	mock.Mock
 }
 
-func (m *UserRepositoryMock) CreateUser(user *domain.User) error {
-	ret := m.Called(user)
-
-	var errorVal error
-	if rf, ok := ret.Get(0).(func(*domain.User) error); ok {
-		errorVal = rf(user)
-	} else {
-		errorVal = ret.Error(0)
-	}
-
-	return errorVal
+func (mock *UserRepositoryMock) CreateUser(user *domain.User) error {
+	args := mock.Called(user)
+	_ = args.Get(0)
+	return args.Error(1)
 }
 
-func (m *UserRepositoryMock) Fetch() ([]domain.User, error) {
-	ret := m.Called()
-
-	var errorVal error
-	if rf, ok := ret.Get(1).(func() error); ok {
-		errorVal = rf()
-	} else {
-		errorVal = ret.Error(1)
-	}
-
-	var users []domain.User
-	if rf, ok := ret.Get(0).(func() []domain.User); ok {
-		users = rf()
-	} else {
-		users = ret.Get(0).([]domain.User)
-	}
-
-	return users, errorVal
+func (mock *UserRepositoryMock) Fetch() ([]domain.User, error) {
+	args := mock.Called()
+	return args.Get(0).([]domain.User), args.Error(1)
 }

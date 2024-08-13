@@ -39,7 +39,7 @@ func (suite *TaskRepositoryTestSuite) SetupSuite() {
 	suite.Require().NoError(err)
 
 	suite.client = client
-	suite.db = client.Database("testdb")
+	suite.db = client.Database("testTaskManager")
 	suite.collection = "tasks"
 	suite.repo = NewTaskRepository(*suite.db, suite.collection)
 }
