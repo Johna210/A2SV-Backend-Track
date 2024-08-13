@@ -76,6 +76,7 @@ func (suite *UserRepositoryTestSuite) TestCreateUser() {
 	// Verify user was inserted
 	collection := suite.db.Collection(suite.collection)
 	var result domain.User
+
 	err = collection.FindOne(context.Background(), bson.M{"email": user.Email}).Decode(&result)
 	suite.Require().NoError(err)
 	assert.Equal(suite.T(), user.Email, result.Email)
