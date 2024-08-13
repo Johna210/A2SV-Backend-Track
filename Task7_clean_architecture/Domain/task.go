@@ -7,27 +7,27 @@ import (
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
-type TaskStaus string
+type TaskStatus string
 
 const (
-	NotStarted TaskStaus = "Not Started"
-	Started    TaskStaus = "Started"
-	Completed  TaskStaus = "Completed"
+	NotStarted TaskStatus = "Not Started"
+	Started    TaskStatus = "Started"
+	Completed  TaskStatus = "Completed"
 )
 
 type Task struct {
 	ID          primitive.ObjectID `bson:"_id"`
 	Title       string             `json:"title" bson:"title"`
 	Description string             `json:"description" bson:"description"`
-	Status      TaskStaus          `json:"status" bson:"status" validate:"required,eq=Not Started|eq=Started|eq=Completed"`
+	Status      TaskStatus         `json:"status" bson:"status" validate:"required,eq=Not Started|eq=Started|eq=Completed"`
 	Due_Date    time.Time          `json:"due_date" bson:"due_date"`
 }
 
 type TaskUpdate struct {
-	Title       *string    `json:"title" bson:"title"`
-	Description *string    `json:"description" bson:"description"`
-	Status      *TaskStaus `json:"status" bson:"status" validate:"omitempty,eq=Not Started|eq=Started|eq=Completed"`
-	Due_Date    *time.Time `json:"due_date" bson:"due_date"`
+	Title       *string     `json:"title" bson:"title"`
+	Description *string     `json:"description" bson:"description"`
+	Status      *TaskStatus `json:"status" bson:"status" validate:"omitempty,eq=Not Started|eq=Started|eq=Completed"`
+	Due_Date    *time.Time  `json:"due_date" bson:"due_date"`
 }
 
 type TaskRepository interface {
