@@ -2,6 +2,7 @@ package repositories
 
 import (
 	"fmt"
+	"time"
 
 	domain "github.com/Johna210/A2SV-Backend-Track/Task8_testing/Domain"
 	"go.mongodb.org/mongo-driver/bson"
@@ -126,6 +127,9 @@ func (ur *userRepository) UpdateUser(c context.Context, id string, user domain.U
 	if user.User_Role != nil {
 		updateFields["user_role"] = user.User_Role
 	}
+
+	// Add the updated_at field with the current timestamp
+	updateFields["updated_at"] = time.Now()
 
 	var updatedUser domain.User
 	idHex, err := primitive.ObjectIDFromHex(id)

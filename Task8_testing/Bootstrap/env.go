@@ -2,6 +2,7 @@ package bootstrap
 
 import (
 	"log"
+	"path/filepath"
 
 	"github.com/spf13/viper"
 )
@@ -15,6 +16,7 @@ type Env struct {
 	DBUser                string `mapstructure:"DB_USER"`
 	DBPass                string `mapstructure:"DB_PASS"`
 	DBName                string `mapstructure:"DB_NAME"`
+	TestDBName            string `mapstructure:"DB_NAME"`
 	AccessTokenExpiryHour int    `mapstructure:"ACCESS_TOKEN_EXPIRY_HOUR"`
 	AccessTokenSecret     string `mapstructure:"ACCESS_TOKEN"`
 }
@@ -22,9 +24,17 @@ type Env struct {
 func NewEnv() *Env {
 	env := Env{}
 
+	// Get the absolute path to the main folder
+	mainFolderPath, err := filepath.Abs(".")
+	if err != nil {
+		log.Fatalf("Error getting absolute path: %v", err)
+	}
+
+	// Add the main folder as the config path
+	viper.AddConfigPath(mainFolderPath)
 	viper.SetConfigFile(".env")
 
-	err := viper.ReadInConfig()
+	err = viper.ReadInConfig()
 	if err != nil {
 		log.Fatal("Can't find the file .env")
 	}
