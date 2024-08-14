@@ -94,12 +94,13 @@ func (tc *TaskController) GetTaskByID(c *gin.Context) {
 
 	task, err := tc.TaskUsecase.GetByID(c, taskID)
 
-	if task.Title == "" {
-		c.JSON(http.StatusNotFound, gin.H{"message": "task with the given id not found"})
-		return
-	}
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
+	if task.Title == "" {
+		c.JSON(http.StatusNotFound, gin.H{"message": "task with the given id not found"})
 		return
 	}
 
