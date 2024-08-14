@@ -23,6 +23,9 @@ jobs:
     - name: Display go version
       run: go version
 
+    - name: Go mod tidy
+      run: go mod tidy
+
     - name: Test
       run: go test ./... -v
 
