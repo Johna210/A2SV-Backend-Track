@@ -24,4 +24,13 @@ jobs:
       run: go version
 
     - name: Test
-      run: go test -v ./...
+      run: go test ./... -v
+
+    - name: Generate coverage report
+      run: go test ./... -coverprofile=coverage.out
+
+    - name: Upload coverage report
+      uses: actions/upload-artifact@v3
+      with:
+        name: coverage-report
+        path: coverage.out
