@@ -2,6 +2,7 @@ package bootstrap
 
 import (
 	"log"
+	"path/filepath"
 
 	"github.com/spf13/viper"
 )
@@ -20,19 +21,34 @@ type Env struct {
 	AccessTokenSecret     string `mapstructure:"ACCESS_TOKEN"`
 }
 
-func NewEnv() *Env {
+func NewEnv(depth int) *Env {
 	env := Env{}
+	var path []string
+	for i := 1; i < depth; i++ {
+		path = append(path, "..")
+	}
 
-	viper.SetConfigFile(".env")
-
-	err := viper.ReadInConfig()
+	projectRoot, err := filepath.Abs(filepath.Join(path...)) // Move up two directories
 	if err != nil {
-		log.Fatal("Can't find the file .env")
+		log.Fatalf("Error getting project root path: %v", err)
+		return nil
+	}
+
+	log.Printf("Project root path: %s", projectRoot)
+
+	// Set the path to the .env file
+	viper.SetConfigFile(filepath.Join(projectRoot, ".env"))
+
+	err = viper.ReadInConfig()
+	if err != nil {
+		log.Fatalf("Can't find the file .env: %v", err)
+		return nil
 	}
 
 	err = viper.Unmarshal(&env)
 	if err != nil {
-		log.Fatal("Environment can't be loaded: ", err)
+		log.Fatalf("Environment can't be loaded: %v", err)
+		return nil
 	}
 
 	if env.AppEnv == "development" {
