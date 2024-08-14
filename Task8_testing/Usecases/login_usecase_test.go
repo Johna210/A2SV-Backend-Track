@@ -53,6 +53,13 @@ func (suite *UserLoginUsecase) TestLoginUserError() {
 	assert.Error(suite.T(), err)
 }
 
+// TeaeardownSuite clears the mock
+func (suite *UserLoginUsecase) TearDownSuite() {
+	suite.mockUserRepo = nil
+	suite.loginUsecase = nil
+	suite.testUser = nil
+}
+
 func TestUserLoginUsecaseTestSuite(t *testing.T) {
 	suite.Run(t, new(UserLoginUsecase))
 }

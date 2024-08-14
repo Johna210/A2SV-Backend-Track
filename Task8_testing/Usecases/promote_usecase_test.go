@@ -45,6 +45,13 @@ func (suite *UserPromoteUsecase) TestPromoteUser() {
 	suite.NoError(err)
 }
 
+// TearDonwSuite clears the mock
+func (suite *UserPromoteUsecase) TearDownSuite() {
+	suite.mockUserRepo = nil
+	suite.promoteUsecase = nil
+	suite.testUser = nil
+}
+
 func TestUserPromoteUsecase(t *testing.T) {
 	suite.Run(t, new(UserSignupUsecase))
 }

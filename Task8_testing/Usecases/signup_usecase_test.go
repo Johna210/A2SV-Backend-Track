@@ -86,6 +86,14 @@ func (suite *UserSignupUsecase) TestCreateInvalidUserError() {
 	suite.mockUserRepo.AssertExpectations(suite.T())
 }
 
+// Teardown for the suite
+func (suite *UserSignupUsecase) TearDownSuite() {
+	suite.mockUserRepo = nil
+	suite.signupUsecase = nil
+	suite.testUser = nil
+	suite.contextTimeout = 0
+}
+
 func TestUserSignupUsecaseTestSuite(t *testing.T) {
 	suite.Run(t, new(UserSignupUsecase))
 }
