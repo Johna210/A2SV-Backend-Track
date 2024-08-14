@@ -32,7 +32,13 @@ func NewSignupUsecase(userRepository domain.UserRepository, timeout time.Duratio
 func (su *signupUsecase) Create(c context.Context, user *domain.User) error {
 	ctx, cancel := context.WithTimeout(c, su.contextTimeout)
 	defer cancel()
-	return su.userRepository.CreateUser(ctx, user)
+
+	err := su.userRepository.CreateUser(ctx, user)
+	if err != nil {
+		return err
+	}
+
+	return nil
 }
 
 // GetUserByEmail retrieves a user by their email address.
