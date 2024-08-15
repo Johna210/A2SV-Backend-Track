@@ -27,6 +27,9 @@ jobs:
     - name: Display go version
       run: go version
       
+    - name: Change to Task8_testing directory
+      run: cd Task8_testing
+    
     - name: Print working directory
       run: pwd
 
