@@ -26,21 +26,22 @@ jobs:
         go-version: '1.22.2'
     - name: Display go version
       run: go version
-      
-    - name: Change to Task8_testing directory
-      run: cd Task8_testing
     
     - name: Print working directory
       run: pwd
+      working-directory: Task8_testing
 
     - name: Go mod tidy
       run: go mod tidy
+      working-directory: Task8_testing
 
     - name: Test
       run: go test ./... -v
+      working-directory: Task8_testing
 
     - name: Generate coverage report
       run: go test ./... -coverprofile=coverage.out
+      working-directory: Task8_testing
 
     - name: Upload coverage report
       uses: actions/upload-artifact@v3
