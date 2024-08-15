@@ -46,14 +46,6 @@ jobs:
       run: go test ./Domain -v -coverprofile=coverage_domain.out -covermode=atomic
       working-directory: Task8_testing
 
-    - name: Combine Coverage Reports
-      run: |
-        go tool cover -func=coverage_controllers.out > coverage_summary.txt
-        go tool cover -func=coverage_usecases.out >> coverage_summary.txt
-        go tool cover -func=coverage_domain.out >> coverage_summary.txt
-        go tool cover -html=coverage_summary.txt -o coverage.html
-      working-directory: Task8_testing
-
     - name: Upload Coverage Reports
       uses: actions/upload-artifact@v3
       with:
