@@ -13,6 +13,9 @@ jobs:
 
   build:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        go-version: ['1.21.x', '1.22.x']
     steps:
     - uses: actions/checkout@v4
 
@@ -23,11 +26,27 @@ jobs:
     - name: Display go version
       run: go version
 
+    - name: Cache Go modules
+      uses: actions/cache@v3
+      with:
+        path: |
+          ~/.cache/go-build
+          /go/pkg/mod
+        key: ${{ runner.os }}-go-${{ hashFiles('**/go.sum') }}
+        restore-keys: |
+          ${{ runner.os }}-go-
+
     - name: Go mod tidy
       run: go mod tidy
 
+    - name: Install golangci-lint
+      run: go install github.com/golangci/golangci-lint/cmd/golangci-lint@latest
+
+    - name: Run golangci-lint
+      run: golangci-lint run ./...
+
     - name: Test
-      run: go test ./... -v
+      run: go test -v ./...
 
     - name: Generate coverage report
       run: go test ./... -coverprofile=coverage.out
