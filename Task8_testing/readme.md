@@ -50,6 +50,7 @@ Task_manager/
 │   ├── promote_usecase.go
 │   ├── signup_usecase_test.go
 │   ├── signup_usecase.go
+│   ├── task_usecase_test.go
 │   └── task_usecase.go
 ├── go.mod
 └── go.sum
