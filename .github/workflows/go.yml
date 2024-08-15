@@ -14,19 +14,7 @@ jobs:
 
   build:
     runs-on: ubuntu-latest
-    services:
-      mongo:
-        image: mongo:latest
-        ports:
-          - 27017:27017
-        options: >-
-          --health-cmd "mongo --eval 'db.runCommand({ ping: 1 })'" 
-          --health-interval=10s
-          --health-timeout=5s
-          --health-retries=5
-          
     steps:
-      
     - uses: actions/checkout@v4
       with:
         subdirectory: Task8_testing
@@ -46,16 +34,33 @@ jobs:
       run: go mod tidy
       working-directory: Task8_testing
 
-    - name: Test
-      run: go test ./... -v
+    - name: Test Controllers
+      run: go test ./Delivery/controllers -v -coverprofile=coverage_controllers.out -covermode=atomic
       working-directory: Task8_testing
 
-    - name: Generate coverage report
-      run: go test ./... -coverprofile=coverage.out
+    - name: Test Usecases
+      run: go test ./Usecases -v  -coverprofile=coverage_usecases.out -covermode=atomic
       working-directory: Task8_testing
 
-    - name: Upload coverage report
+    - name: Test Domain
+      run: go test ./Domain -v -coverprofile=coverage_domain.out -covermode=atomic
+      working-directory: Task8_testing
+
+    - name: Combine Coverage Reports
+      run: |
+        go tool cover -func=coverage_controllers.out > coverage_summary.txt
+        go tool cover -func=coverage_usecases.out >> coverage_summary.txt
+        go tool cover -func=coverage_domain.out >> coverage_summary.txt
+        go tool cover -html=coverage_summary.txt -o coverage.html
+      working-directory: Task8_testing
+
+    - name: Upload Coverage Reports
       uses: actions/upload-artifact@v3
       with:
-        name: coverage-report
-        path: coverage.out
+        name: coverage-reports
+        path: |
+          Task8_testing/coverage_controllers.out
+          Task8_testing/coverage_usecases.out
+          Task8_testing/coverage_domain.out
+          Task8_testing/coverage_summary.txt
+          Task8_testing/coverage.html
